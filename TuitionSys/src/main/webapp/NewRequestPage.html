@@ -1,0 +1,232 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Tuition Reimbursement Management System</title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+ <!--  link rel="stylesheet" href="css/styles.css"> -->
+
+</head>
+
+<body>
+
+<table style="width:1000px; margin-left:auto; margin-right:auto " class="table-sm table">
+  <thead class="thead-dark" style="text-align:center">
+  	<tr>		
+  		<th colspan="8" ><h2>Tuition Reimbursement Management System</h2></th>
+  	</tr>
+ </thead>
+  	<tr>
+  		<td>Name:</td>
+  		<td><span id="PersonName">--DummyName--</span></td>
+  		<td>Badge Number:</td>
+  		<td><span id="PersonId">--1234567--</span></td>
+  		<td>Amount Remaining:</td>
+  		<td><span id="RemainingAmount">--$8000--</span></td>
+  		<td>Amount Awarded:</td>
+  		<td><span id="AwardedAmount">--$6000--</span></td> 		
+  	</tr>
+  	 <tr>
+  		<td colspan="8"><button type="button" id="Cancel" onclick="cancelPage()">Cancel</button>
+  		<button type="button" id="Logout" onclick="logout()">Logout</button>
+  		</td>
+  	</tr>
+</table>
+<br><br>
+
+  <table style="width:1000px; margin-left:auto; margin-right:auto " class="table-sm table border">
+  <thead class="thead-light" style="text-align:center">
+  	<tr>		
+  		<th colspan="6" >Request New Tuition Reimbursement</th>
+  	</tr>
+  </thead>
+  	<tr>
+  		<td>Event Name:</td>
+  		<td><input type="text" id="EventName"></td>
+  		<td>Event Type:</td>
+  		<td><select id="EventType" onchange="calcRefund()">
+			<option value="College">College/University Course</option>
+  			<option value="Seminar">Seminar</option>
+ 			<option value="TestPrep">TestPrep</option>
+  			<option value="Certification">Certification</option>
+    		<option value="TechTraining">Technical Training</option>
+  			<option value="Other">Other</option>
+		</select></td>
+		<td>Cost:</td>
+  		<td><input type="number" id="EventCost" oninput="calcRefund()"></td>	
+  	</tr>
+  	<tr>
+		<td>Location:</td>
+		<td><input type="text" id="EventLocation"></td>
+		<td>Date:</td>
+		<td><input type="date" id="EventDate"></td>
+		<td>Time:</td>
+		<td><input type="time" id="EventTime"></td>
+	</tr>
+	<tr>
+		<td>Description:</td>
+		<td><input type="text" id="Description"></td>
+		<td>Work Justification:</td>
+		<td><input type="text" id="WorkReason"></td>
+		<td>Missed work:</td>
+		<td><input type="text" id="MissedWork"></td>
+	</tr>
+	<tr>
+		<td>Grading Format:</td>
+		<td><select id="GradeFormat">
+			<option value="Letter">Letter Grade</option>
+  			<option value="Percentage">Percentage</option>
+ 			<option value="PassFail">Pass/Fail</option>
+  			<option value="Presentation">Presentation</option>
+    		<option value="Numeric">Numeric Score</option>
+  			<option value="Other">Other</option>
+		</select></td>
+		<td>Passing Grade:</td>
+		<td><input type="text" id="PassingGrade"></td>
+		<td>Projected Reimbursement:</td>
+		<td><span id="ProjectedRefund">$0</span></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td><button type="button" id="Submit" onclick="submitForm()">Submit</button>
+		<button type="button" id="Cancel" onclick="cancelPage()">Cancel</button></td>
+		<td></td>
+		<td></td>
+	</tr>
+  </table>
+
+  <!-- script src="js/scripts.js"></script -->
+</body>
+
+<script>
+
+
+	var homepage;	
+	let xhttp = new XMLHttpRequest();
+
+	xhttp.onreadystatechange = function() {
+		if(this.readyState == 4 && this.status == 200) {
+			//console.log(this.responseText);
+
+			homepage = JSON.parse(this.responseText);
+			
+			//Populate fields in the top bar
+			document.getElementById("PersonName").innerHTML = homepage.user.name;
+			document.getElementById("PersonId").innerHTML = homepage.user.personID;
+			document.getElementById("RemainingAmount").innerHTML = "$"+homepage.user.amountRemaining;
+			document.getElementById("AwardedAmount").innerHTML = "$"+homepage.user.amountAwarded;
+			console.log(homepage.user.name);
+			
+			//console.log(homepage);
+		}
+	}
+	
+	xhttp.open("GET", "http://localhost:8080/TuitionSys/showHomepage.do?", true);
+	xhttp.send();
+
+	//Set up top bar.
+	
+	function calcRefund() {
+		
+		etype = document.getElementById("EventType").value;
+		cost = document.getElementById("EventCost").value;
+		remaining = homepage.user.amountRemaining;
+		
+		switch(etype) {
+		case "College": percent=80.0; break;
+		case "Seminar": percent=60.0; break;
+		case "TestPrep": percent=75.0; break;
+		case "Certification": percent=100.0; break;
+		case "TechTraining": percent=90.0; break;
+		case "Other": percent=30.0; break;
+		}
+		
+		percent = percent/100.0;
+		refund = Math.round(cost*percent);
+		amtLeft = homepage.user.amountRemaining;
+		
+		if (refund > amtLeft) refund = amtLeft;	
+		
+		document.getElementById("ProjectedRefund").innerHTML="$"+refund;
+	return refund;
+	}
+
+	function cancelPage() {
+		window.location.assign('http://localhost:8080/TuitionSys/ListingPage.html');
+	}
+	
+	function logout() {
+		//don't forget actual logout servlet code here;
+		window.location.assign('http://localhost:8080/TuitionSys/LoginPage.html');
+	}
+	
+    function submitForm() {
+    	
+        let eventName = document.getElementById("EventName").value; if(eventName=="") eventName="[No Event Name Provided]";
+    
+        let description = document.getElementById("Description").value; if(description=="") description="[No Description Provided]";
+        let requestDate = "2020-08-12"; //locked into presenation date for now
+        let cost = document.getElementById("EventCost").value; if(cost=="") cost="0";
+        
+        
+        let eventLocation = document.getElementById("EventLocation").value; if(eventLocation=="") eventLocation="[No Event Location Provided]";
+        let eventDate = document.getElementById("EventDate").value; if(eventDate=="") eventDate="[No Event Date Provided]";
+        let eventTime = document.getElementById("EventTime").value; if(eventTime=="") eventTime="[No Event Time Provided]";
+        
+        let eventType = document.getElementById("EventType").value; //Dropdown box, will not be empty
+        let refund = calcRefund(); //must be calculated. 
+        
+        
+        let workReason = document.getElementById("WorkReason").value; if(workReason=="") workReason="[No Work Reason Provided]";
+        let missedWork = document.getElementById("MissedWork").value; if(missedWork=="") missedWork="None";
+
+		let gradeFormat = document.getElementById("GradeFormat").value; //Dropdown box, will not be empty
+		let passingGrade = document.getElementById("PassingGrade").value; if(passingGrade=="") passingGrade="Satisfactory";
+        
+        //Make AJAX call:
+        let xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+            }
+        }
+
+        xhttp.open("POST","http://localhost:8080/TuitionSys/makeRequest.do",true);
+
+        xhttp.setRequestHeader('Content-Type','application/json');
+
+        let listing = {
+        	eventName: eventName,
+        	
+        	description: description,
+        	requestDate: requestDate,
+        	cost: cost,
+        	refund: refund,
+        	
+        	eventLocation: eventLocation,
+        	eventDate: eventDate,
+        	eventTime: eventTime,
+        	eventType: eventType,
+        		
+        	workReason: workReason,
+        	missedWork: missedWork,
+        	
+        	gradeFormat: gradeFormat,
+        	passingGrade: passingGrade
+        }
+        
+        console.log(listing);
+        xhttp.send(JSON.stringify(listing));
+
+		window.location.assign('http://localhost:8080/TuitionSys/ListingPage.html');
+    }
+</script>
+
+
+
+</html>

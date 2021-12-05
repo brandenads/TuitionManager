@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pokemon Viewer</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+ 
+</head>
+<body>
+<div id="pokelist"></div>
+	<h3>Pokemon Viewer By ID</h3>
+	<input id="pid" type="number">
+
+	<button onclick="getPokemon()">Get Pokemon</button>
+	<p id="result"></p>
+	
+	<button onclick="getThePokemon(1)">Get Pokemon One</button>
+	<p id="result"></p>
+	
+	<button onclick="getThePokemon(2)">Get Pokemon Two</button>
+	<p id="result"></p>
+</body>
+
+
+<script>
+		allPokemon();
+
+		function allPokemon() {
+			let pid = document.getElementById("pid").value;
+
+			let xhttp = new XMLHttpRequest();
+
+			xhttp.onreadystatechange = function() {
+				if(this.readyState == 4 && this.status == 200) {
+					console.log(this.responseText);
+
+					let pokemon = JSON.parse(this.responseText);
+					
+					
+				for(k=0; k<=1; k++) {	
+					
+					var id=384;
+					var tbl=document.createElement("table");
+					tbl.setAttribute("id","table"+k);
+					document.getElementById("pokelist").appendChild(tbl);
+					
+					
+					tbl.classList.add("table-sm");
+					tbl.classList.add("table");
+					tbl.style.width="300px";
+					tbl.style.marginLeft="auto";
+					tbl.style.marginRight="auto";
+					
+					for(i=0; i<pokemon.length; i++) {
+						
+						rw = tbl.insertRow(i);
+						rwid = rw.insertCell(0);
+						rwid.innerHTML=pokemon[i].id;
+						rwname = rw.insertCell(1);
+						rwname.innerHTML=pokemon[i].name;
+						rwtype = rw.insertCell(2);
+						rwtype.innerHTML=pokemon[i].type;
+						
+					}
+					
+					//Must be AFTER the for loop, or it will be at the bottom!!
+					var thd = tbl.createTHead();
+					thd.classList.add("thead-dark");
+					thd.style.textAlign="center";
+					var uprow = thd.insertRow(0);
+					
+					th = document.createElement("th");  //must create a separate one each time!
+					th.innerHTML="Pokemon ID";
+					uprow.appendChild(th);
+					
+					th = document.createElement("th");
+					th.innerHTML="Pokemon Name";
+					uprow.appendChild(th);
+					
+					th = document.createElement("th");
+					th.innerHTML="Pokemon Type";
+					uprow.appendChild(th);
+					
+				}	
+					
+//					let information = `<h3>id: ${pokemon.id}</h3>
+//									   <h3>name: ${pokemon.name}</h3>
+//									   <h3>type: ${pokemon.type}</h3>`;
+//
+					//document.getElementById("result").innerHTML = information;
+					
+				}
+			}
+
+			xhttp.open("GET", "http://localhost:8080/TuitionSys/allPokemon.do?", true);
+
+			xhttp.send();
+		
+		}
+	
+	
+	
+	function getPokemon() {
+		let pid = document.getElementById("pid").value;
+
+		let xhttp = new XMLHttpRequest();
+
+		xhttp.onreadystatechange = function() {
+			if(this.readyState == 4 && this.status == 200) {
+				console.log(this.responseText);
+
+				let pokemon = JSON.parse(this.responseText);
+				console.log(pokemon);
+				
+				let information = `<h3>id: ${pokemon.id}</h3>
+								   <h3>name: ${pokemon.name}</h3>
+								   <h3>type: ${pokemon.type}</h3>`;
+
+				document.getElementById("result").innerHTML = information;
+			}
+		}
+
+		xhttp.open("GET", "http://localhost:8080/TuitionSys/getPokemon.do?id=" + pid, true);
+
+		xhttp.send();
+	}
+	
+	function getThePokemon(number) {
+		let pid = number;
+
+		let xhttp = new XMLHttpRequest();
+
+		xhttp.onreadystatechange = function() {
+			if(this.readyState == 4 && this.status == 200) {
+				console.log(this.responseText);
+
+				let pokemon = JSON.parse(this.responseText);
+				console.log(pokemon);
+				
+				let information = `<h3>id: ${pokemon.id}</h3>
+								   <h3>name: ${pokemon.name}</h3>
+								   <h3>type: ${pokemon.type}</h3>`;
+
+				document.getElementById("result").innerHTML = information;
+			}
+		}
+
+		xhttp.open("GET", "http://localhost:8080/TuitionSys/getPokemon.do?id=" + pid, true);
+
+		xhttp.send();
+	}
+
+	
+</script>
+</html>

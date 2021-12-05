@@ -1,0 +1,521 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Tuition Reimbursement Management System</title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+ <!--  link rel="stylesheet" href="css/styles.css"> -->
+
+</head>
+<script>
+		var homepage;
+		var listN;
+		
+		allPokemon();
+		
+		function allPokemon() {
+			//let pid = document.getElementById("pid").value;
+
+			let xhttp = new XMLHttpRequest();
+
+			xhttp.onreadystatechange = function() {
+				if(this.readyState == 4 && this.status == 200) {
+					//console.log(this.responseText);
+
+					homepage = JSON.parse(this.responseText);
+					console.log(homepage);
+					
+					//Populate fields in the top bar
+					document.getElementById("PersonName").innerHTML = homepage.user.name;
+					document.getElementById("PersonId").innerHTML = homepage.user.personID;
+					document.getElementById("RemainingAmount").innerHTML = "$"+homepage.user.amountRemaining;
+					document.getElementById("AwardedAmount").innerHTML = "$"+homepage.user.amountAwarded;
+					console.log(homepage.user.name);
+					
+					for(n=0; n<homepage.requestList.length; n++) {
+						
+						listN = n; //update global iterator
+						//Create top bar
+						var tbl=document.createElement("table");
+						tbl.setAttribute("id","table"+n);
+						document.getElementById("listings").appendChild(tbl);
+						tbl.classList.add("table-sm");
+						tbl.classList.add("table");
+						tbl.classList.add("border");
+						tbl.style.width="1000px";
+						tbl.style.marginLeft="auto";
+						tbl.style.marginRight="auto";
+						
+						//First row 
+						var row = tbl.insertRow();
+						row.insertCell().innerHTML="Status:";
+						row.insertCell().innerHTML=homepage.requestList[n].status;
+						row.insertCell().innerHTML="Requestor:";
+						row.insertCell().innerHTML=homepage.requestList[n].ownerName;
+						row.insertCell().innerHTML="Cost:";
+						row.insertCell().innerHTML=homepage.requestList[n].cost;
+						
+						
+						//Second row
+						var row = tbl.insertRow();
+						row.insertCell().innerHTML="Location:";
+						row.insertCell().innerHTML=homepage.requestList[n].eventLocation;
+						row.insertCell().innerHTML="Event Date:";
+						row.insertCell().innerHTML=homepage.requestList[n].eventDate;
+						row.insertCell().innerHTML="Event Time:";
+						row.insertCell().innerHTML=homepage.requestList[n].eventTime;
+						
+						//Third row
+						var row = tbl.insertRow();
+						row.insertCell().innerHTML="Description:";
+						row.insertCell().innerHTML=homepage.requestList[n].description;
+						row.insertCell().innerHTML="Justification:";
+						row.insertCell().innerHTML=homepage.requestList[n].workReason;
+						row.insertCell().innerHTML="Missed Work:";
+						row.insertCell().innerHTML=homepage.requestList[n].missedWork;
+						
+						//Fourth row
+						var row = tbl.insertRow();
+						row.insertCell().innerHTML="Grading Format:";
+						row.insertCell().innerHTML=homepage.requestList[n].gradeFormat;
+						row.insertCell().innerHTML="Passing Grade:";
+						row.insertCell().innerHTML=homepage.requestList[n].passingGrade;
+						row.insertCell().innerHTML="Projected Refund:";
+						
+
+						if ((homepage.user.name == homepage.requestList[n].benCoName) && (homepage.requestList[n].status == "DeptHeadApproved")) {
+							//If the benefits coordinator is logged in, and the request status is DeptHeadApproved, then supply a field
+							//for the Benefits Coordinator to alter the refund amount.
+							mbox=document.createElement("INPUT");
+							mbox.setAttribute("type","text");
+							mbox.setAttribute("id","REF"+homepage.requestList[n].requestID);
+							row.insertCell().appendChild(mbox);
+							document.getElementById("REF"+homepage.requestList[n].requestID).value=homepage.requestList[n].refund;
+							document.getElementById("REF"+homepage.requestList[n].requestID).size="4";
+						} else {
+							//Otherwise, just display the refund amount as read-only text.
+							row.insertCell().innerHTML=homepage.requestList[n].refund;
+						}
+				
+						//Message table
+						var mrow = tbl.insertRow();
+						mc = mrow.insertCell();
+						mc.setAttribute("id","messageList"+n);
+						mc.colSpan="6";
+						
+						//Create top bar
+						var mtbl=document.createElement("table");
+						mtbl.setAttribute("id","table"+n);
+						mtbl.classList.add("table-sm");
+						mtbl.classList.add("table");
+						mtbl.style.width="800px";
+						mtbl.style.marginLeft="auto";
+						mtbl.style.marginRight="auto";
+						
+						//console.log(homepage.requestList[n].messages.length);
+						for(var m=0; m<homepage.requestList[n].messages.length; m++) {
+							
+							var msg = mtbl.insertRow();
+							msg.insertCell().innerHTML=homepage.requestList[n].messages[m].fromName;
+							msg.insertCell().innerHTML=homepage.requestList[n].messages[m].message;
+						}
+						
+						//This is the table head for the message table!!
+						var mthd = mtbl.createTHead();
+						mthd.classList.add("thead-light");
+						
+						var muprow = mthd.insertRow(0);				
+						mth = document.createElement("th");  
+						mth.innerHTML="Messages and notes";
+						mth.colSpan="6";
+						mth.style.textAlign="center";
+						muprow.appendChild(mth);
+						
+						var muprow = mthd.insertRow(1);				
+						mth = document.createElement("th");  
+						mth.innerHTML="From";
+						mth.style.width="25%";
+						muprow.appendChild(mth);
+						
+						mth = document.createElement("th");  
+						mth.innerHTML="Message or Note";
+						muprow.appendChild(mth);
+						
+						mc.appendChild(mtbl);
+						
+						//===============================================================================================================================
+						//Display action bar
+						var row=tbl.insertRow();
+						row.insertCell().innerHTML="Send Message";
+						
+						//Message box
+						mbox=document.createElement("INPUT");
+						mbox.setAttribute("type","text");
+						mbox.setAttribute("id","TXT"+homepage.requestList[n].requestID);
+						row.insertCell().appendChild(mbox);
+						
+						//Selector box
+						mlist=document.createElement("SELECT");
+						mlist.setAttribute("id","SND"+homepage.requestList[n].requestID);
+						
+							//Always availible: Original Employee, Leave General Remarks, and supervisor.
+							opt=document.createElement("OPTION");
+							opt.setAttribute("value","Notes");
+							optext=document.createTextNode("Reason/Notes");
+							opt.appendChild(optext);
+							mlist.appendChild(opt);							
+							
+							opt=document.createElement("OPTION");
+							opt.setAttribute("value","Employee");
+							optext=document.createTextNode(homepage.requestList[n].ownerName+" (requesting employee)");
+							opt.appendChild(optext);
+							mlist.appendChild(opt);
+							
+							opt=document.createElement("OPTION");
+							opt.setAttribute("value","Supervisor");
+							optext=document.createTextNode(homepage.requestList[n].ownerName+"'s Supervisor ("+homepage.requestList[n].supervisorName+")");
+							opt.appendChild(optext);					
+							mlist.appendChild(opt);
+							
+							//Show department head if available
+							if (homepage.requestList[n].deptHeadName != "NOTHING") {
+								opt=document.createElement("OPTION");
+								opt.setAttribute("value","DeptHead");
+								optext=document.createTextNode(homepage.requestList[n].ownerName+"'s Department Head ("+homepage.requestList[n].deptHeadName+")");
+								opt.appendChild(optext);					
+								mlist.appendChild(opt);
+							}
+						
+							//Show benefits coordinator if available
+							if (homepage.requestList[n].benCoName != "NOTHING") {
+								opt=document.createElement("OPTION");
+								opt.setAttribute("value","BenCo");
+								optext=document.createTextNode(homepage.requestList[n].ownerName+"'s Benefits Coordinator ("+homepage.requestList[n].benCoName+")");
+								opt.appendChild(optext);					
+								mlist.appendChild(opt);
+							}
+							
+						//Add the option list to the table.
+						row.insertCell().appendChild(mlist);
+						
+						//Message button
+						mbtn=document.createElement("BUTTON");
+						mbtn.setAttribute("type","button");
+						mbtn.setAttribute("id","BTN"+homepage.requestList[n].requestID);
+						btnText=document.createTextNode("Send Message");
+						mbtn.appendChild(btnText);
+						row.insertCell().appendChild(mbtn);
+						mbtn.addEventListener("click", sendMessage);
+				
+						//Show approve button if it's that employee's "turn"
+						dec=0;
+						if ((homepage.user.name == homepage.requestList[n].supervisorName) && (homepage.requestList[n].status == "EmployeeSubmitted")) dec=1;
+						if ((homepage.user.name == homepage.requestList[n].deptHeadName) && (homepage.requestList[n].status == "SupervisorApproved")) dec=1;
+						if ((homepage.user.name == homepage.requestList[n].benCoName) && (homepage.requestList[n].status == "DeptHeadApproved")) dec=1;
+						if ((homepage.user.name == homepage.requestList[n].supervisorName) && (homepage.requestList[n].status == "BenCoApproved")) dec=1;
+						if (dec==1) {
+							mbtn=document.createElement("BUTTON");
+							mbtn.setAttribute("type","button");
+							mbtn.setAttribute("id","YES"+homepage.requestList[n].requestID);
+							btnText=document.createTextNode("Approve");
+							mbtn.appendChild(btnText);
+							row.insertCell().appendChild(mbtn);
+							mbtn.addEventListener("click", approveRequest);
+						}
+						
+						//Show cancel button if the original owner is logged in, and the request has not already been
+						//awarded or cancelled.
+						dec=1;
+						var noDeclineButton=0; //Fix a minor bug with top-level employees.
+						if(homepage.requestList[n].status == "MoneyAwarded") dec=0;
+						if(homepage.requestList[n].status == "Cancelled") dec=0;
+						if(homepage.requestList[n].status == "Declined") dec=0;
+						if ((homepage.user.name == homepage.requestList[n].ownerName) && dec==1)
+						{
+							mbtn=document.createElement("BUTTON");
+							mbtn.setAttribute("type","button");
+							mbtn.setAttribute("id","NAY"+homepage.requestList[n].requestID);
+							btnText=document.createTextNode("Cancel");
+							mbtn.appendChild(btnText);
+							row.insertCell().appendChild(mbtn);
+							mbtn.addEventListener("click", declineRequest);
+							noDeclineButton=1;
+						}
+						
+						//Show decline button if it's that employee's "turn"
+						dec=0;
+						if ((homepage.user.name == homepage.requestList[n].supervisorName) && (homepage.requestList[n].status == "EmployeeSubmitted")) dec=1;
+						if ((homepage.user.name == homepage.requestList[n].deptHeadName) && (homepage.requestList[n].status == "SupervisorApproved")) dec=1;
+						if ((homepage.user.name == homepage.requestList[n].benCoName) && (homepage.requestList[n].status == "DeptHeadApproved")) dec=1;
+						if ((homepage.user.name == homepage.requestList[n].supervisorName) && (homepage.requestList[n].status == "BenCoApproved")) dec=1;
+						if (dec==1 && noDeclineButton==0) {
+							mbtn=document.createElement("BUTTON");
+							mbtn.setAttribute("type","button");
+							mbtn.setAttribute("id","NAY"+homepage.requestList[n].requestID);
+							btnText=document.createTextNode("Decline");
+							mbtn.appendChild(btnText);
+							row.insertCell().appendChild(mbtn);
+							mbtn.addEventListener("click", declineRequest);
+						}
+						
+						//That's it for the action bar!
+						
+						
+						
+						//This is the table head for the listing table!!
+						var thd = tbl.createTHead();
+						thd.classList.add("thead-light");
+						
+						var uprow = thd.insertRow(0);				
+						th = document.createElement("th");  
+						th.innerHTML=homepage.requestList[n].eventName+" ("+homepage.requestList[n].eventType+")   reimbursement request for "+homepage.requestList[n].ownerName;
+						th.colSpan="6";
+						th.style.textAlign="center";
+						uprow.appendChild(th);
+						
+						
+
+					}
+	
+					
+				}
+			}
+
+			xhttp.open("GET", "http://localhost:8080/TuitionSys/showHomepage.do?", true);
+
+			xhttp.send();
+		
+		}
+		
+		function sendMessage() {
+			
+			var buttonID = event.srcElement.id;
+			var reqID = buttonID.substr(3);
+			msg = document.getElementById("TXT"+reqID).value;
+			if (msg == "") msg = "NONE";
+			var sndto = document.getElementById("SND"+reqID).value;
+			console.log("The message "+msg+" was sent to "+sndto+" for requestID "+reqID);
+			
+			var sendId;
+			switch(sndto) {
+			case "Supervisor": sendId = homepage.requestList[fID(reqID)].supervisorID; break;
+			case "DeptHead": sendId = homepage.requestList[fID(reqID)].deptHeadID; break;
+			case "BenCo": sendId =  homepage.requestList[fID(reqID)].benCoID; break;
+			case "Employee": sendId = homepage.requestList[fID(reqID)].ownerID; break;
+			}
+			
+			console.log(sendId, homepage.user.name);
+
+		        //Make AJAX call:
+		        let xhttp = new XMLHttpRequest();
+
+		        xhttp.onreadystatechange = function() {
+		            if(this.readyState == 4 && this.status == 200) {
+		                console.log(this.responseText);
+		                
+		            }
+		        }
+
+
+		        xhttp.open("POST","http://localhost:8080/TuitionSys/sendMessage.do",true);
+
+		        xhttp.setRequestHeader('Content-Type','application/json');
+
+
+		        let message = {
+		        		
+	        		messageTo: sendId,
+	        		messageFrom: homepage.user.personID,
+	        		requestID: reqID,
+	        		message: msg,
+	        		fromName: homepage.user.name
+		        };
+		        
+		        xhttp.send(JSON.stringify(message));
+
+				window.location.assign("http://localhost:8080/TuitionSys/ListingPage.html");
+			
+		}
+		
+		function approveRequest() {
+			
+			var buttonID = event.srcElement.id;
+			var reqID = buttonID.substr(3);
+			msg = document.getElementById("TXT"+reqID).value;
+			if (msg == "") msg = "  ";
+			
+			//If the benefits amount was changed, then note this in the fromName field of the message object.
+			//The server will send a message to the employee, and NOT change the status.
+			var fromNum = 9999;
+			if ((homepage.user.name == homepage.requestList[fID(reqID)].benCoName) && (homepage.requestList[fID(reqID)].status == "DeptHeadApproved")) {
+				if (document.getElementById("REF"+homepage.requestList[fID(reqID)].requestID).value == homepage.requestList[fID(reqID)].refund)
+					fromNum = 9999;
+				else
+					fromNum = document.getElementById("REF"+homepage.requestList[fID(reqID)].requestID).value;
+			}
+			
+			console.log("The request was approved because of"+msg);
+	
+	        //Make AJAX call:
+	        let xhttp = new XMLHttpRequest();
+
+	        xhttp.onreadystatechange = function() {
+	            if(this.readyState == 4 && this.status == 200) {
+	                console.log(this.responseText);
+	                
+	            }
+	        }
+
+
+	        xhttp.open("POST","http://localhost:8080/TuitionSys/approveRequest.do",true);
+
+	        xhttp.setRequestHeader('Content-Type','application/json');
+
+
+	        let message = {
+	        		
+        		messageTo: fromNum, //altered benefits show up here. 9999 means no change.
+        		messageFrom: homepage.user.personID,
+        		requestID: reqID,
+        		message: msg,
+        		fromName: homepage.user.name
+	        };
+	        
+	        xhttp.send(JSON.stringify(message));
+
+			window.location.assign("http://localhost:8080/TuitionSys/ListingPage.html");
+
+		}
+		
+		
+		function fID (id) {
+			//helper to find array index of given requestID
+			for(f=0; f<homepage.requestList.length; f++) {
+				if (homepage.requestList[f].requestID == id) return f;
+				
+			}
+			
+		}
+		
+		
+		
+		function declineRequest() {
+			
+			canDecline=0;
+			
+			var buttonID = event.srcElement.id;
+			var reqID = buttonID.substr(3);
+			msg = document.getElementById("TXT"+reqID).value;
+			if (msg == "") msg = "This request has been cancelled by the requestor.";
+			
+			//The owner of the request can cancel anytime the request is active.
+			if(homepage.requestList[fID(reqID)].userAction == "ShowCancelButton") canDecline=1;
+			console.log(homepage.requestList[fID(reqID)].userAction);
+			
+			//Otherwise, there must be a reason in the message field for the denial.
+			if(document.getElementById("TXT"+reqID).value != "") canDecline=1;
+			
+			if (canDecline==1) {
+			console.log("The request was declined or canceled for requestID "+msg);
+			
+		
+			
+	        //Make AJAX call:
+	        let xhttp = new XMLHttpRequest();
+
+	        xhttp.onreadystatechange = function() {
+	            if(this.readyState == 4 && this.status == 200) {
+	                console.log(this.responseText);
+	                
+	            }
+	        }
+
+
+	        xhttp.open("POST","http://localhost:8080/TuitionSys/declineRequest.do",true);
+
+	        xhttp.setRequestHeader('Content-Type','application/json');
+
+
+	        let message = {
+	        		
+        		messageTo: 9999,
+        		messageFrom: homepage.user.personID,
+        		requestID: reqID,
+        		message: msg,
+        		fromName: homepage.user.name
+	        };
+	        
+	        xhttp.send(JSON.stringify(message));
+
+			window.location.assign("http://localhost:8080/TuitionSys/ListingPage.html");
+		
+		
+			}	
+		}
+		
+		function newRequest() {
+			
+			window.location.assign("http://localhost:8080/TuitionSys/NewRequestPage.html");
+		}
+		
+		function logout() {
+
+			let xhttp = new XMLHttpRequest();
+
+			xhttp.onreadystatechange = function() {
+				if(this.readyState == 4 && this.status == 200) {
+					console.log(this.responseText);
+
+				}
+			}
+
+			xhttp.open("GET", "http://localhost:8080/TuitionSys/logout.do", true);
+
+			xhttp.send();
+			
+			window.location.assign("http://localhost:8080/TuitionSys/LoginPage.html");
+		}
+	
+</script>
+
+
+<body>
+
+
+<table style="width:1000px; margin-left:auto; margin-right:auto " class="table-sm table">
+  <thead class="thead-dark" style="text-align:center">
+  	<tr>		
+  		<th colspan="8" ><h2>Tuition Reimbursement Management System</h2></th>
+  	</tr>
+ </thead>
+  	<tr>
+  		<td>Name:</td>
+  		<td><span id="PersonName">--DummyName--</span></td>
+  		<td>Badge Number:</td>
+  		<td><span id="PersonId">--1234567--</span></td>
+  		<td>Amount Remaining:</td>
+  		<td><span id="RemainingAmount">--$8000--</span></td>
+  		<td>Amount Awarded:</td>
+  		<td><span id="AwardedAmount">--$6000--</span></td> 		
+  	</tr>
+  	<tr>
+  			<td colspan="8"><button type="button" id="Create" onclick="newRequest()">Create new request</button>
+  			<button type="button" id="Logout" onclick="logout()">Logout</button>
+  			
+  			</td>
+  	</tr>
+</table>
+<br><br>
+
+<div id="listings"></div>
+
+</body>
+
+
+
+
+
+
+</html>

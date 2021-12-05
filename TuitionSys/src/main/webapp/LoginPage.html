@@ -1,0 +1,119 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Tuition Reimbursement Management System</title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+ <!--  link rel="stylesheet" href="css/styles.css"> -->
+
+</head>
+
+<body>
+
+<table style="width:1000px; margin-left:auto; margin-right:auto " class="table-sm table">
+  <thead class="thead-dark" style="text-align:center">
+  	<tr>		
+  		<th colspan="8" ><h2>Tuition Reimbursement Management System</h2></th>
+  	</tr>
+ </thead>
+</table>
+<br><br>
+
+  <table style="width:1000px; margin-left:auto; margin-right:auto" class="table-sm table border">
+  <thead class="thead-light" style="text-align:center">
+  	<tr>		
+  		<th colspan="6" >Login To The TRMS System</th>
+  	</tr>
+  </thead>
+  	<tr>
+  		<td>User Name:</td>
+  		<td><input type="text" id="UsernameField" ></td>
+  		<td></td>
+  		<td>Password:</td>
+  		<td><input type="text" id="PasswordField"></td>
+  		<td></td>
+   	</tr>
+   	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td><button type="button" id="Submit" onclick="login()">Submit</button><button type="button" id="Cancel" onclick="cancel()">Cancel</button></td>
+		<td></td>
+		<td>	
+		</td>
+	</tr>
+	<tr>
+	<td colspan="6" style="text-align: center"><span id="logintext">Please Type Your Login Credentials Above</span></td>
+	</tr>
+  </table>
+
+  <!-- script src="js/scripts.js"></script -->
+</body>
+
+<script>
+
+    function login() {
+    	
+        let username = document.getElementById("UsernameField").value;
+        let password = document.getElementById("PasswordField").value;
+ 
+        if(password=="") { username="johndoeuser"; password="johndoepassword"; }
+        
+    	//Kludge for preventing fat-fingering
+    	shouldLogin = 0;
+    	if( (username == "j" && password == "j") ||
+    		(username == "r" && password == "r") ||
+    		(username == "d" && password == "d") ||
+    		(username == "p" && password == "p") ||
+    		(username == "t" && password == "t") )
+       	/*if( (username == "johndoeuser" && password == "johndoepassword") ||
+           		(username == "robertuser" && password == "robertpassword") ||
+           		(username == "danieluser" && password == "danielpassword") ||
+           		(username == "patrickuser" && password == "patrickpassword") ||
+           		(username == "timothyuser" && password == "timothypassword") )*/
+    		shouldLogin = 1;
+    	if (shouldLogin == 0) {
+    		document.getElementById("logintext").innerHTML="Your login credentials are not valid. Plese try again."
+    	    document.getElementById("UsernameField").value="";
+        	document.getElementById("PasswordField").value="";
+    	}
+    	
+        //Make AJAX call:
+        if (shouldLogin==1) {
+        let xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                setTimeout(() => { window.location.assign('http://localhost:8080/TuitionSys/ListingPage.html');  }, 100);         
+            }
+        }
+
+        xhttp.open("POST","http://localhost:8080/TuitionSys/login.do",true);
+
+        xhttp.setRequestHeader('Content-Type','application/json');
+
+        /*
+            The send function will now pass in parameters/variables
+            into the Request Body.
+        */
+        let accessPass = {
+        	username: username,
+        	password: password
+        };
+        
+        xhttp.send(JSON.stringify(accessPass));
+
+    }
+    	
+    }
+    
+    function cancel() {
+    	document.getElementById("UsernameField").value="";
+    	document.getElementById("PasswordField").value="";
+    	document.getElementById("logintext").innerHTML="Please type your login credentials above.";
+    }
+</script>
+</html>

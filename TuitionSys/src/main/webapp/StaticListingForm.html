@@ -1,0 +1,133 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Tuition Reimbursement Management System</title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+ <!--  link rel="stylesheet" href="css/styles.css"> -->
+
+</head>
+
+<body>
+
+<table style="width:1000px; margin-left:auto; margin-right:auto " class="table-sm table">
+  <thead class="thead-dark" style="text-align:center">
+  	<tr>		
+  		<th colspan="8" ><h2>Tuition Reimbursement Management System</h2></th>
+  	</tr>
+ </thead>
+  	<tr>
+  		<td>Name:</td>
+  		<td><span id="PersonName">--DummyName--</span></td>
+  		<td>Badge Number:</td>
+  		<td><span id="PersonId">--1234567--</span></td>
+  		<td>Amount Remaining:</td>
+  		<td><span id="RemainingAmount">--$8000--</span></td>
+  		<td>Amount Awarded:</td>
+  		<td><span id="AwardedAmount">--$6000--</span></td> 		
+  	</tr>
+  	<tr>
+  			<td colspan="8"><button type="button" id="Create">Create new request</button>
+  			<button type="button" id="Logout">Logout</button>
+  			
+  			<!-- JUST FOR DEVELOPMENT! Somehow my servlets aren't redirecting -->
+			<a href="https://www.w3schools.com">Create new request</a>
+			<a href="https://www.w3schools.com">Logout</a>	
+  			
+  			</td>
+  	</tr>
+</table>
+<br><br>
+
+  <table style="width:1000px; margin-left:auto; margin-right:auto " class="table-sm table border">
+  <thead class="thead-light" style="text-align:center">
+  	<tr>		
+  		<th colspan="6" id="EventName">Tuition Reimbursement Request For: <span>EventName</span></th>
+  	</tr>
+  </thead>
+  	<tr>
+  		<td>Status:</td>
+  		<td><span id="Status">Status</span></td>
+  		<td>Event Type:</td>
+  		<td><span id="EventType">EventType</span></td>
+		<td>Cost:</td>
+  		<td><span id="EventCost">$4000</span></td>	
+  	</tr>
+  	<tr>
+		<td>Location:</td>
+		<td><span id="EventName">EventName</span></td>
+		<td>Date:</td>
+		<td><span id="EventDate">EventDate</span></td>
+		<td>Time:</td>
+		<td><span id="EventTime">EventTime</span></td>
+	</tr>
+	<tr>
+		<td>Description:</td>
+		<td><span id="Description">Description</span></td>
+		<td>Work Justification:</td>
+		<td><span id="Justification">WorkJustification</span></td>
+		<td>Missed work:</td>
+		<td><span id="MissedWork">MissedWork</span></td>
+	</tr>
+	<tr>
+		<td>Grading Format:</td>
+		<td><span id="GradeFormat">GradingFormt</span></td>
+		<td>Passing Grade:</td>
+		<td><span id="PassingGrade">PassingGrade</span></td>
+		<td>Projected Refund:</td>
+		<td><span id="ProjectedRefund">$0.00</span></td>
+	</tr>
+	
+	
+	
+	<tr>
+		<td colspan="6">
+			<table style="width:900px; margin-left:auto; margin-right:auto ">
+  			<thead class="thead-light" >
+  			<tr>		
+  			<th colspan="6" id="EventName" style="text-align:center">Messages and Notes</th>
+  			</tr>
+  			<tr>
+  			<th style="width:25%">From</th>
+  			<th style="width:75%">Message or Note</th>
+  			</thead>
+	  			<tr>
+	  				<td>Sender1</td>
+	  				<td>This is a sample message from Sender1</td>
+	  			</tr>
+	  			<tr>
+	  				<td>Sender2</td>
+	  				<td>Did you know the quick brown fox jumped over the lazy dog?</td>
+	  			</tr>
+	  			<tr>
+	  				<td>Sender3</td>
+	  				<td>All of this text is AUTOGEN by JavaScript</td>
+	  			</tr>
+  			</table>
+  		</td>	
+  	</tr>
+	<tr>
+		<td>Send Message:</td>
+		<td><input type="text" id="Message"></td>
+		<td><select id="SendTo">
+			<option value="Supervisor">MySupervisor</option>
+  			<option value="DeptHead">MyDeptHead</option>
+ 			<option value="BenCo">MyBenefitsCoordinator</option>
+ 			<option value="DeclineReason">Reason For Declining</option>
+		</select></td>
+		<td><button type="button" id="SendMessage">SendMessage</button></td>
+		<td><button type="button" id="Approve">Approve</button><button type="button" id="Decline">Decline</button></td>
+		<td></td>
+	</tr>
+  </table>
+
+
+
+
+
+
+  <!-- script src="js/scripts.js"></script -->
+</body>
+</html>

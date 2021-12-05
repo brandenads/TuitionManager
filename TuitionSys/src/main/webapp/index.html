@@ -1,0 +1,89 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Tuition Reimbursement Management System</title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+ <!--  link rel="stylesheet" href="css/styles.css"> -->
+
+</head>
+
+<body>
+
+  <table style="width:1000px; margin-left:auto; margin-right:auto " class="table-sm table">
+  <thead class="thead-light" style="text-align:center">
+  	<tr>		
+  		<th colspan="6" >Request New Tuition Reimbursement</th>
+  	</tr>
+  </thead>
+  	<tr>
+  		<td>Event Name:</td>
+  		<td><input type="text" id="EventName"></td>
+  		<td>Event Type:</td>
+  		<td><select id="EventType">
+			<option value="college">College/University Course</option>
+  			<option value="Seminar">Seminar</option>
+ 			<option value="TestPrep">TestPrep</option>
+  			<option value="Certification">Certification</option>
+    		<option value="TechTraining">Technical Training</option>
+  			<option value="Other">Other</option>
+		</select></td>
+		<td>Cost:</td>
+  		<td><input type="number" id="EventCost"></td>	
+  	</tr>
+  	<tr>
+		<td>Location:</td>
+		<td><input type="text" id="EventName"></td>
+		<td>Date:</td>
+		<td><input type="date" id="EventDate"></td>
+		<td>Time:</td>
+		<td><input type="time" id="EventTime"></td>
+	</tr>
+	<tr>
+		<td>Description:</td>
+		<td><input type="text" id="Description"></td>
+		<td>Work Justification:</td>
+		<td><input type="text" id="Justification"></td>
+		<td>Missed work:</td>
+		<td><input type="text" id="Missedwork"></td>
+	</tr>
+	<tr>
+		<td>Grading Format:</td>
+		<td><select id="GradeType">
+			<option value="Letter">Letter Grade</option>
+  			<option value="Percentage">Percentage</option>
+ 			<option value="PassFail">Pass/Fail</option>
+  			<option value="Presentation">Presentation</option>
+    		<option value="Numeric">Numeric Score</option>
+  			<option value="Other">Other</option>
+		</select></td>
+		<td>Passing Grade:</td>
+		<td><input type="text" id="PassingGrade"></td>
+		<td>Projected Refund:</td>
+		<td><span id="ProjectedRefund">$0.00</span></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td><button type="button" id="Submit">Submit</button><button type="button" id="Cancel">Cancel</button>
+		<td>
+		<!-- JUST FOR DEVELOPMENT! Somehow my servlets aren't redirecting -->
+		<a href="https://www.w3schools.com">Submit</a>
+		<a href="https://www.w3schools.com">Cancel</a>
+		
+		
+		
+		</td>
+  </table>
+
+
+
+
+
+
+  <!-- script src="js/scripts.js"></script -->
+</body>
+</html>
