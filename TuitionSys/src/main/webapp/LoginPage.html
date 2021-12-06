@@ -87,11 +87,15 @@
         xhttp.onreadystatechange = function() {
             if(this.readyState == 4 && this.status == 200) {
                 console.log(this.responseText);
-                setTimeout(() => { window.location.assign('http://localhost:8080/TuitionSys/ListingPage.html');  }, 100);         
+                //setTimeout(() => { window.location.assign('http://localhost:8080/TuitionSys/ListingPage.html');  }, 100);
+                setTimeout(() => { window.location.assign('http://ec2-3-19-134-45.us-east-2.compute.amazonaws.com:8080/TuitionSys/ListingPage.html');  }, 100);
+                
             }
         }
 
-        xhttp.open("POST","http://localhost:8080/TuitionSys/login.do",true);
+        //xhttp.open("POST","http://localhost:8080/TuitionSys/login.do",true);
+        xhttp.open("POST","http://ec2-3-19-134-45.us-east-2.compute.amazonaws.com:8080/TuitionSys/login.do",true);
+        
 
         xhttp.setRequestHeader('Content-Type','application/json');
 

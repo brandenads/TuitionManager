@@ -125,7 +125,10 @@
 		}
 	}
 	
-	xhttp.open("GET", "http://localhost:8080/TuitionSys/showHomepage.do?", true);
+	//xhttp.open("GET", "http://localhost:8080/TuitionSys/showHomepage.do?", true);
+	xhttp.open("GET", "http://ec2-3-19-134-45.us-east-2.compute.amazonaws.com:8080/TuitionSys/showHomepage.do?", true);
+	
+	
 	xhttp.send();
 
 	//Set up top bar.
@@ -156,12 +159,15 @@
 	}
 
 	function cancelPage() {
-		window.location.assign('http://localhost:8080/TuitionSys/ListingPage.html');
+		//window.location.assign('http://localhost:8080/TuitionSys/ListingPage.html');
+		window.location.assign('http://ec2-3-19-134-45.us-east-2.compute.amazonaws.com:8080/TuitionSys/TuitionSys/ListingPage.html');
 	}
 	
 	function logout() {
 		//don't forget actual logout servlet code here;
-		window.location.assign('http://localhost:8080/TuitionSys/LoginPage.html');
+		
+		//window.location.assign('http://localhost:8080/TuitionSys/LoginPage.html');
+		window.location.assign('http://ec2-3-19-134-45.us-east-2.compute.amazonaws.com:8080/TuitionSys/LoginPage.html');
 	}
 	
     function submitForm() {
@@ -196,7 +202,8 @@
             }
         }
 
-        xhttp.open("POST","http://localhost:8080/TuitionSys/makeRequest.do",true);
+        //xhttp.open("POST","http://localhost:8080/TuitionSys/makeRequest.do",true);
+        xhttp.open("POST","http://ec2-3-19-134-45.us-east-2.compute.amazonaws.com:8080/TuitionSys/makeRequest.do",true);
 
         xhttp.setRequestHeader('Content-Type','application/json');
 
@@ -223,7 +230,8 @@
         console.log(listing);
         xhttp.send(JSON.stringify(listing));
 
-		window.location.assign('http://localhost:8080/TuitionSys/ListingPage.html');
+		//window.location.assign('http://localhost:8080/TuitionSys/ListingPage.html');
+		window.location.assign('http://ec2-3-19-134-45.us-east-2.compute.amazonaws.com:8080/TuitionSys/ListingPage.html');
     }
 </script>
 
